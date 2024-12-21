@@ -108,5 +108,6 @@ dependencies {
 
     // Kotlin Standard Library (if explicitly needed)
     implementation(libs.kotlin.stdlib)
+//    kapt(libs.androidx.room.compiler.v250)
 }
 
