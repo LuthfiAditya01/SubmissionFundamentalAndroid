@@ -6,9 +6,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-
 data class Event(
-
     @field:SerializedName("summary")
     val summary: String,
 
@@ -52,5 +50,5 @@ data class Event(
     val category: String,
 
     @field:SerializedName("isFavorite")
-    var isFavorite: Boolean?
+    var isFavorite: Boolean? = false
 ) : Parcelable

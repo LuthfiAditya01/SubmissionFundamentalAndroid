@@ -72,7 +72,7 @@ dependencies {
 
     // Room Database
     implementation(libs.androidx.room.ktx)
-//    kapt(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
 
     // AndroidX Libraries
     implementation(libs.androidx.core.ktx)
@@ -109,3 +109,4 @@ dependencies {
     // Kotlin Standard Library (if explicitly needed)
     implementation(libs.kotlin.stdlib)
 }
+

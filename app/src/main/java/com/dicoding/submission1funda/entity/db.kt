@@ -6,19 +6,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-@Entity
-@Parcelize
+@Entity(tableName = "favorite_event")
 data class db(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    var id : Int = 0,
-
-    @ColumnInfo(name = "eventId")
-    var eventId : Int = 0,
-
-    @ColumnInfo(name = "eventName")
-    var eventName : String? = null,
-
-    @ColumnInfo(name = "isFavourite")
-    var isFavourite : Boolean = false
-) : Parcelable
+    @PrimaryKey val id: Int,
+    val eventName: String
+)

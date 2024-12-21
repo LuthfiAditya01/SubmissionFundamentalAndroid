@@ -20,7 +20,12 @@ import com.dicoding.submission1funda.entity.DbDao
 //import com.dicoding.submission1funda.data.response.ListEventsItem
 import com.dicoding.submission1funda.databinding.ActivityMainBinding
 import com.dicoding.submission1funda.databinding.FragmentDetailEventBinding
+import com.dicoding.submission1funda.entity.DbRoomDatabase
+import com.dicoding.submission1funda.entity.db
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,6 +45,10 @@ class DetailEvent : Fragment() {
         binding1 = ActivityMainBinding.inflate(layoutInflater)
         val navView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
         navView.visibility = View.GONE
+
+        // Initialize DbDao
+        val db = DbRoomDatabase.getDatabase(requireContext())
+        dbDao = db.DbDao()
 
         val event = arguments?.getParcelable<Event>("event")
         event?.let {
@@ -75,7 +84,6 @@ class DetailEvent : Fragment() {
         binding.tvEventOwner.text = "Organizer: ${event.ownerName}"
         binding.tvEventTime.text = "Time: ${event.beginTime}"
         binding.tvEventQuota.text = "Quota: ${event.quota - event.registrants}"
-//        binding.description.text = HtmlCompat.fromHtml(event.description, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
         binding.tvEventDescription.text = HtmlCompat.fromHtml(event.description ?: "No description available", HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.buttonEventLink.text = "Register"
         binding.buttonEventLink.isVisible = true
@@ -84,19 +92,26 @@ class DetailEvent : Fragment() {
             startActivity(intent)
         }
         binding.favouriteButton.setOnClickListener {
-            if (event.isFavorite == false) {
-                binding.favouriteButton.setImageResource(R.drawable.ic_favourite)
-                dbDao.insertFavourite(event.id)
-            } else if (event.isFavorite == true) {
-                binding.favouriteButton.setImageResource(R.drawable.ic_not_favourite)
-                dbDao.deleteFavourite(event.id)
+            Log.d("DetailEvent", "Favorite button clicked")
+            Log.d("DetailEvent", "Current favorite status: ${event.isFavorite}")
+            CoroutineScope(Dispatchers.IO).launch {
+                if (event.isFavorite == null || event.isFavorite == false) {
+                    binding.favouriteButton.setImageResource(R.drawable.ic_favourite)
+                    dbDao.insertFavourite(db(event.id, event.name))
+                    event.isFavorite = true
+                    Log.d("DetailEvent", "Added to favorites: ${event.name}")
+                } else if (event.isFavorite == true) {
+                    binding.favouriteButton.setImageResource(R.drawable.ic_not_favourite)
+                    dbDao.deleteFavourite(event.id)
+                    event.isFavorite = false
+                    Log.d("DetailEvent", "Removed from favorites: ${event.name}")
+                }
             }
         }
         Log.d("DetailEvent", "Event Link: ${event.link}")
         Log.d("DetailEvent", "Button visibility: ${binding.buttonEventLink.visibility}")
-        // Button Visibility: 0
-
     }
+
     override fun onDestroyView() {
         val navView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
         navView.visibility = View.VISIBLE
