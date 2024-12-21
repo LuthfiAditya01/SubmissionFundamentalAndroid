@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.dicoding.submission1funda.data.response.Event
 
 @Dao
 interface DbDao {
@@ -38,9 +39,12 @@ interface DbDao {
     suspend fun isFavorite(eventId: Int): Boolean
 
     @Query("UPDATE db SET isFavourite = 1 WHERE id = :eventId")
-    fun insertFavourite(eventId: Int): Int
+    suspend fun insertFavourite(eventId: Int): Int
 
     @Query("UPDATE db SET isFavourite = 0 WHERE id = :eventId")
-    fun deleteFavourite(eventId: Int): Int
+    suspend fun deleteFavourite(eventId: Int): Int
+
+//    @Query("SELECT * FROM db WHERE id = :eventId")
+//    suspend fun getFavoriteEventByIdSync(eventId: Int): Event?
 
 }

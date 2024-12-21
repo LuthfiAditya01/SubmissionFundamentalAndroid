@@ -12,15 +12,22 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.dicoding.submission1funda.R
 import com.dicoding.submission1funda.data.response.Event
 import com.dicoding.submission1funda.entity.DbDao
+import com.dicoding.submission1funda.entity.db
+import com.dicoding.submission1funda.entity.DbRoomDatabase
 //import com.dicoding.submission1funda.data.response.ListEventsItem
 import com.dicoding.submission1funda.databinding.ActivityMainBinding
 import com.dicoding.submission1funda.databinding.FragmentDetailEventBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.loopj.android.http.AsyncHttpClient.log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +39,8 @@ class DetailEvent : Fragment() {
     private lateinit var binding1: ActivityMainBinding
     private val binding get() = _binding!!
     private lateinit var dbDao: DbDao
+//    val database = MyDatabase.getDatabase(requireContext()) // Ganti `MyDatabase` dengan nama database Anda
+//    dbDao = database.dbDao()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,6 +49,15 @@ class DetailEvent : Fragment() {
         binding1 = ActivityMainBinding.inflate(layoutInflater)
         val navView: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
         navView.visibility = View.GONE
+        val database = DbRoomDatabase.getDatabase(requireContext()) // Ganti dengan nama database Anda
+//        dbDao = database.DbDao() // Menentukan dbDao
+        dbDao = DbRoomDatabase.getDatabase(requireContext()).DbDao()
+//        val database = Room.databaseBuilder(
+//            requireContext(),
+//            MyDatabase::class.java,
+//            "my_database" // Ganti nama database sesuai dengan implementasi Anda
+//        ).build()
+//        dbDao = database.dbDao()
 
         val event = arguments?.getParcelable<Event>("event")
         event?.let {
@@ -84,14 +102,34 @@ class DetailEvent : Fragment() {
             startActivity(intent)
         }
         binding.favouriteButton.setOnClickListener {
-            if (event.isFavorite == false) {
-                binding.favouriteButton.setImageResource(R.drawable.ic_favourite)
-                dbDao.insertFavourite(event.id)
-            } else if (event.isFavorite == true) {
-                binding.favouriteButton.setImageResource(R.drawable.ic_not_favourite)
-                dbDao.deleteFavourite(event.id)
+            lifecycleScope.launch {
+                var isFavorite = event.isFavorite ?: false
+                if (!isFavorite) {
+                    withContext(Dispatchers.IO) {
+                        dbDao.insertFavourite(event.id)
+                        Log.d("DetailEvent", "Event with ID ${event.id} marked as favorite.")
+                    }
+                    isFavorite = true
+                    binding.favouriteButton.setImageResource(R.drawable.ic_favourite)
+                } else {
+                    withContext(Dispatchers.IO) {
+                        dbDao.deleteFavourite(event.id)
+                        Log.d("DetailEvent", "Event with ID ${event.id} removed from favorites.")
+                    }
+                    isFavorite = false
+                    binding.favouriteButton.setImageResource(R.drawable.ic_not_favourite)
+                }
+
+                // Optionally refresh UI state after updating database
+                val updatedEvent = dbDao.getFavoriteEventByIdSync(event.id) // Assuming this method is available
+                updatedEvent?.let {
+                    binding.favouriteButton.setImageResource(
+                        if (it.isFavourite) R.drawable.ic_favourite else R.drawable.ic_not_favourite
+                    )
+                }
             }
         }
+
         Log.d("DetailEvent", "Event Link: ${event.link}")
         Log.d("DetailEvent", "Button visibility: ${binding.buttonEventLink.visibility}")
         // Button Visibility: 0
