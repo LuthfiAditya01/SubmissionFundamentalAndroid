@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.dicoding.submission1funda.R
 import com.dicoding.submission1funda.data.response.Event
+import com.dicoding.submission1funda.entity.DbDao
 //import com.dicoding.submission1funda.data.response.ListEventsItem
 import com.dicoding.submission1funda.databinding.ActivityMainBinding
 import com.dicoding.submission1funda.databinding.FragmentDetailEventBinding
@@ -30,6 +31,7 @@ class DetailEvent : Fragment() {
     private var _binding: FragmentDetailEventBinding? = null
     private lateinit var binding1: ActivityMainBinding
     private val binding get() = _binding!!
+    private lateinit var dbDao: DbDao
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,6 +82,15 @@ class DetailEvent : Fragment() {
         binding.buttonEventLink.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.link))
             startActivity(intent)
+        }
+        binding.favouriteButton.setOnClickListener {
+            if (event.isFavorite == false) {
+                binding.favouriteButton.setImageResource(R.drawable.ic_favourite)
+                dbDao.insertFavourite(event.id)
+            } else if (event.isFavorite == true) {
+                binding.favouriteButton.setImageResource(R.drawable.ic_not_favourite)
+                dbDao.deleteFavourite(event.id)
+            }
         }
         Log.d("DetailEvent", "Event Link: ${event.link}")
         Log.d("DetailEvent", "Button visibility: ${binding.buttonEventLink.visibility}")

@@ -36,4 +36,11 @@ interface DbDao {
 
     @Query("SELECT EXISTS (SELECT 1 FROM db WHERE id = :eventId)")
     suspend fun isFavorite(eventId: Int): Boolean
+
+    @Query("UPDATE db SET isFavourite = 1 WHERE id = :eventId")
+    fun insertFavourite(eventId: Int): Int
+
+    @Query("UPDATE db SET isFavourite = 0 WHERE id = :eventId")
+    fun deleteFavourite(eventId: Int): Int
+
 }

@@ -51,6 +51,17 @@
             app:layout_constraintTop_toBottomOf="@+id/image_event"
             tools:text="Event Title" />
 
+        <ImageButton
+            android:id="@+id/favourite_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:contentDescription="Favourite Button"
+            android:src="@drawable/ic_not_favourite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_event_title" />
+
         <TextView
             android:id="@+id/tv_event_owner"
             android:layout_width="wrap_content"

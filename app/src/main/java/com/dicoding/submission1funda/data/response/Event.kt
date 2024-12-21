@@ -52,5 +52,5 @@ data class Event(
     val category: String,
 
     @field:SerializedName("isFavorite")
-    val isFavorite: Boolean?
+    var isFavorite: Boolean?
 ) : Parcelable
