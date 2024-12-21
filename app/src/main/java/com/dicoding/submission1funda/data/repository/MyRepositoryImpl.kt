@@ -32,4 +32,5 @@ class MyRepositoryImpl(
     override fun getNearestActiveEvent(): Call<EventsResponse> {
         return apiService.getNearestActiveEvent()
     }
+
 }
