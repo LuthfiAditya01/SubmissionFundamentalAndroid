@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.dicoding.submission1funda.R
 import com.dicoding.submission1funda.data.response.Event
 import com.dicoding.submission1funda.databinding.ItemEventBinding
 import com.dicoding.submission1funda.ui.DetailEvent
@@ -49,8 +50,11 @@ class FavouriteEventsAdapter(
                 eventName.text = event.name
                 eventDescription.text = event.description
 
+                // Load image with placeholder and error handling
                 Glide.with(imgItemPhoto.context)
                     .load(event.imageLogo)
+                    .placeholder(R.drawable.placeholder_image) // Add a placeholder image
+                    .error(R.drawable.ic_error) // Add an error image
                     .into(imgItemPhoto)
 
                 // Handle favorite button click

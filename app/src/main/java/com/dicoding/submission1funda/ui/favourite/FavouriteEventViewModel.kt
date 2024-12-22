@@ -24,36 +24,40 @@ class FavouriteEventViewModel(private val dbDao: DbDao) : ViewModel() {
         viewModelScope.launch {
             _isLoadingActive.value = true
             try {
-                // Step 1: Ambil ID favorit dari database
+                // Ambil semua ID favorit dari database
                 val favouriteIds = withContext(Dispatchers.IO) {
                     dbDao.getAllFavouriteIds()
                 }
 
-                // Step 2: Ambil detail acara dari API berdasarkan ID favorit
+                // Jika ada ID favorit, ambil data lengkap dari API
                 if (favouriteIds.isNotEmpty()) {
-                    val events = mutableListOf<Event>()
-                    for (id in favouriteIds) {
-                        val response = ApiConfig.getApiService().getEventById(id) // Ganti dengan API yang sesuai
-                        if (response.isSuccessful) {
-                            response.body()?.let { event ->
-                                events.add(event)
+                    val events = favouriteIds.mapNotNull { id ->
+                        try {
+                            val response = ApiConfig.getApiService().getEventById(id) // Panggil API
+                            if (response.isSuccessful) {
+                                response.body() // Ambil data event jika berhasil
+                            } else {
+                                Log.e("FavouriteEventViewModel", "Failed to fetch event with ID: $id")
+                                null
                             }
-                        } else {
-                            Log.e("FavouriteEventViewModel", "Failed to fetch event with ID: $id")
+                        } catch (e: Exception) {
+                            Log.e("FavouriteEventViewModel", "Error fetching event ID $id: ${e.message}")
+                            null
                         }
                     }
 
-                    // Step 3: Update LiveData dengan daftar acara favorit
+                    // Update LiveData dengan daftar event yang berhasil diambil
                     _favouriteEvents.value = events
                 } else {
-                    _favouriteEvents.value = emptyList()
+                    _favouriteEvents.value = emptyList() // Tidak ada ID favorit
                 }
             } catch (e: Exception) {
-                Log.e("FavouriteEventViewModel", "Error: ${e.message}")
+                Log.e("FavouriteEventViewModel", "Error fetching favourite events: ${e.message}")
                 _favouriteEvents.value = emptyList()
             } finally {
                 _isLoadingActive.value = false
             }
         }
     }
+
 }
