@@ -26,6 +26,17 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_FavouriteEvent"
+        android:name="com.dicoding.submission1funda.ui.favourite.FavouriteEvent"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_favourite_event">
+        <action
+            android:id="@+id/action_completedEvent_to_eventDetailFragment"
+            app:destination="@id/eventDetailFragment" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/eventDetailFragment"
         android:name="com.dicoding.submission1funda.ui.DetailEvent"
         android:label="Event Detail"

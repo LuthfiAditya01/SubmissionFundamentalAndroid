@@ -2,7 +2,7 @@
     <string name="app_name">Submission1Funda</string>
     <string name="title_home">Coming Soon</string>
     <string name="title_dashboard">Completed</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="favourite">Favourite</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

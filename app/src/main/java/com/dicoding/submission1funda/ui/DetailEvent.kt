@@ -38,6 +38,9 @@ class DetailEvent : Fragment() {
     private val binding get() = _binding!!
     private lateinit var dbDao: DbDao
 
+    companion object {
+        const val EXTRA_EVENT = "extra_event"
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

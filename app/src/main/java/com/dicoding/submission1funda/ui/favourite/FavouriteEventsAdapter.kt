@@ -1,7 +1,7 @@
 package com.dicoding.submission1funda.ui.favourite
 
+import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dicoding.submission1funda.data.response.Event
 import com.dicoding.submission1funda.databinding.ItemEventBinding
+import com.dicoding.submission1funda.ui.DetailEvent
 
-class FavouriteEventsAdapter :
-    ListAdapter<Event, FavouriteEventsAdapter.FavouriteEventViewHolder>(DIFF_CALLBACK) {
+class FavouriteEventsAdapter(
+    private val onFavoriteChanged: (Event) -> Unit
+) : ListAdapter<Event, FavouriteEventsAdapter.FavouriteEventViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Event>() {
@@ -43,38 +45,29 @@ class FavouriteEventsAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(event: Event) {
-            binding.eventName.text = event.name // Display event name
-            binding.eventDescription.text = event.description // Display event description
+            binding.apply {
+                eventName.text = event.name
+                eventDescription.text = event.description
 
-            // Load image using Glide
-            Glide.with(binding.imgItemPhoto.context)
-                .load(event.imageLogo) // Replace with the correct image URL property
-                .into(binding.imgItemPhoto)
+                Glide.with(imgItemPhoto.context)
+                    .load(event.imageLogo)
+                    .into(imgItemPhoto)
 
-            // Handle favorite button click
-            binding.imgItemPhoto.setOnClickListener {
-                val updatedFavoriteStatus = !(event.isFavorite ?: false)
-                event.isFavorite = updatedFavoriteStatus
-            }
+                // Handle favorite button click
+                imgItemPhoto.setOnClickListener {
+                    val updatedFavoriteStatus = !(event.isFavorite ?: false)
+                    event.isFavorite = updatedFavoriteStatus
+                    onFavoriteChanged(event)
+                }
 
-            // Navigate to detail view on item click
-            binding.root.setOnClickListener {
-                onEventClicked?.invoke(event)
+                // Navigate to DetailEventActivity on item click
+                root.setOnClickListener {
+                    val intent = Intent(root.context, DetailEvent::class.java).apply {
+                        putExtra(DetailEvent.EXTRA_EVENT, event)
+                    }
+                    root.context.startActivity(intent)
+                }
             }
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteEventViewHolder {
-        val binding = ItemEventBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return FavouriteEventViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: FavouriteEventViewHolder, position: Int) {
-        val event = getItem(position)
-        holder.bind(event)
     }
 }
