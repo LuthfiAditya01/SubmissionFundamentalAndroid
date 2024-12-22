@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.dicoding.submission1funda.ARG_PARAM1
-import com.dicoding.submission1funda.ARG_PARAM2
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.submission1funda.R
 import com.dicoding.submission1funda.databinding.FragmentFavouriteEventBinding
+import com.dicoding.submission1funda.entity.DbRoomDatabase
 
 /**
  * A simple [Fragment] subclass.
@@ -16,25 +17,44 @@ import com.dicoding.submission1funda.databinding.FragmentFavouriteEventBinding
  * create an instance of this fragment.
  */
 class FavouriteEvent : Fragment() {
-    // TODO: Rename and change types of parameters
     private var _binding: FragmentFavouriteEventBinding? = null
-    private var binding get() = _binding!!
-    private val
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favourite_event, container, false)
+    ): View {
+        _binding = FragmentFavouriteEventBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recyclerViewAdapter = FavouriteEventAdapter() // Adapter untuk RecyclerView
+        binding.recyclerView.adapter = recyclerViewAdapter
+
+        val viewModel: FavouriteEventViewModel by viewModels {
+            FavouriteEventViewModelFactory(DbRoomDatabase.getDatabase(requireContext()).DbDao())
+        }
+
+        // Observe daftar acara favorit
+        viewModel.favouriteEvents.observe(viewLifecycleOwner) { events ->
+            recyclerViewAdapter.submitList(events) // Perbarui RecyclerView dengan data
+        }
+
+        // Observe status loading
+        viewModel.isLoadingActive.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        // Panggil fetchFavouriteEvents untuk memuat data
+        viewModel.fetchFavouriteEvents()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

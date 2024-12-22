@@ -51,4 +51,5 @@ data class Event(
 
     @field:SerializedName("isFavorite")
     var isFavorite: Boolean? = false
-) : Parcelable
+) : Parcelable {
+}

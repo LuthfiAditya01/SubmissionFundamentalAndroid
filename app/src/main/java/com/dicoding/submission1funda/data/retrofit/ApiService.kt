@@ -1,8 +1,10 @@
 package com.dicoding.submission1funda.data.retrofit
 
+import com.dicoding.submission1funda.data.response.Event
 import com.dicoding.submission1funda.data.response.EventsResponse
 import com.dicoding.submission1funda.data.response.EventResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -44,4 +46,8 @@ interface ApiService {
     // Get the nearest active event
     @GET("events/nearest")
     fun getNearestActiveEvent(): Call<EventsResponse>
+
+    @GET("events/{id}")
+    suspend fun getEventById(@Path("id") id: Int): Response<Event>
+
 }
