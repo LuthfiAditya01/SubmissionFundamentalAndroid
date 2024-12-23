@@ -22,7 +22,6 @@
         <action
             android:id="@+id/action_completedEvent_to_eventDetailFragment"
             app:destination="@id/eventDetailFragment" />
-
     </fragment>
 
     <fragment
@@ -31,9 +30,8 @@
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_favourite_event">
         <action
-            android:id="@+id/action_completedEvent_to_eventDetailFragment"
+            android:id="@+id/action_favouriteEvent_to_eventDetailFragment"
             app:destination="@id/eventDetailFragment" />
-
     </fragment>
 
     <fragment

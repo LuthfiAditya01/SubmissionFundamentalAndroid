@@ -100,7 +100,7 @@ class DetailEvent : Fragment() {
             CoroutineScope(Dispatchers.IO).launch {
                 if (event.isFavorite == null || event.isFavorite == false) {
                     binding.favouriteButton.setImageResource(R.drawable.ic_favourite)
-                    dbDao.insertFavourite(db(event.id, event.name))
+                    dbDao.insertFavourite(db(event.id))
                     event.isFavorite = true
                     Log.d("DetailEvent", "Added to favorites: ${event.name}")
                 } else if (event.isFavorite == true) {

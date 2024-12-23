@@ -25,15 +25,12 @@ class FavouriteEvent : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize adapter with the required parameter
         val recyclerViewAdapter = FavouriteEventsAdapter(
             onFavoriteChanged = { event ->
                 // Handle favorite status change here
-                // You might want to call a viewModel method here
             }
         )
 
-        // Setup RecyclerView
         binding.recycleViewFavouriteEvent.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerViewAdapter
@@ -43,17 +40,14 @@ class FavouriteEvent : Fragment() {
             FavouriteEventViewModelFactory(DbRoomDatabase.getDatabase(requireContext()).DbDao())
         }
 
-        // Observe favorite events
         viewModel.favouriteEvents.observe(viewLifecycleOwner) { events ->
             recyclerViewAdapter.submitList(events)
         }
 
-        // Observe loading status
         viewModel.isLoadingActive.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBarCompleted.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        // Load favorite events
         viewModel.fetchFavouriteEvents()
     }
 
