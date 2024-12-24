@@ -12,4 +12,8 @@
         android:id="@+id/navigation_FavouriteEvent"
         android:icon="@drawable/ic_favourite"
         android:title="@string/favourite" />
+    <item
+        android:id="@+id/navigation_DarkMode"
+        android:icon="@drawable/ic_favourite"
+        android:title="Dark Mode" />
 </menu>

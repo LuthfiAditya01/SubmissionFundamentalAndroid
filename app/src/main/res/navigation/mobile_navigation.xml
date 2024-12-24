@@ -25,6 +25,13 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_DarkMode"
+        android:name="com.dicoding.submission1funda.ui.DarkMode.DarkMode"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_completed_event">
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_FavouriteEvent"
         android:name="com.dicoding.submission1funda.ui.favourite.FavouriteEvent"
         android:label="@string/title_dashboard"
