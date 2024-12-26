@@ -1,4 +1,4 @@
-package com.dicoding.submission1funda.ui.DarkMode
+package com.dicoding.submission1funda.ui.darkMode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

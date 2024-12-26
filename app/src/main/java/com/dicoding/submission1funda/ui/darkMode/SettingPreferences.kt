@@ -1,4 +1,4 @@
-package com.dicoding.submission1funda.ui.DarkMode
+package com.dicoding.submission1funda.ui.darkMode
 
 import android.content.Context
 import androidx.datastore.core.DataStore

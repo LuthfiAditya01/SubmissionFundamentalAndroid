@@ -50,4 +50,11 @@ interface ApiService {
     @GET("events/{id}")
     suspend fun getEventById(@Path("id") id: Int): Response<Event>
 
+    // Update this method to handle multiple IDs
+    @GET("events")
+    suspend fun getEventsByIds(
+        @Query("ids") ids: List<Int>
+    ): Response<EventsResponse>
+
+
 }

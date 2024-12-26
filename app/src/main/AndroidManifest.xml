@@ -24,6 +24,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.DetailEvent"
+            android:label="Detail Page"
+            android:exported="true" />
+
+
     </application>
 
 </manifest>
