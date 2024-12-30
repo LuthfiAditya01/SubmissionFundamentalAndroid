@@ -1,8 +1,10 @@
 package com.dicoding.submission1funda.ui.favourite
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +42,12 @@ class FavouriteEventsAdapter(
     override fun onBindViewHolder(holder: FavouriteEventViewHolder, position: Int) {
         val event = getItem(position)
         holder.bind(event)
+        holder.itemView.setOnClickListener {
+            val bundle = Bundle().apply {
+                putParcelable("event", event)
+            }
+            it.findNavController().navigate(R.id.action_favouriteEvent_to_eventDetailFragment, bundle)
+        }
     }
 
     inner class FavouriteEventViewHolder(private val binding: ItemEventBinding) :
@@ -65,12 +73,7 @@ class FavouriteEventsAdapter(
                 }
 
                 // Navigate to DetailEventActivity on item click
-                root.setOnClickListener {
-                    val intent = Intent(root.context, DetailEvent::class.java).apply {
-                        putExtra(DetailEvent.EXTRA_EVENT, event)
-                    }
-                    root.context.startActivity(intent)
-                }
+
             }
         }
     }
